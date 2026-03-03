@@ -53,6 +53,15 @@ function important(){
     }
 }
 
+function findAfterDate(command){
+    let date = new Date(command.split(' ')['1']);
+    for (let todo of todos){
+        if (new Date(todo.split(';')[1]) > date){
+            console.log(todo);
+        }
+    }
+}
+
 function processCommand(command) {
     switch (command.split(' ')[0]) {
         case 'exit':
@@ -66,6 +75,9 @@ function processCommand(command) {
             break;
         case 'user':
             findUser(command);
+            break;
+        case 'date':
+            findAfterDate(command);
             break;
         default:
             console.log('wrong command');
