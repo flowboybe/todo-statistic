@@ -41,6 +41,35 @@ function findUser(command){
     }
 }
 
+function sort(whatToSort){
+
+    switch(whatToSort){
+        case 'user':
+            todos.sort((a, b) => (
+                a.split('; ')[0].toLowerCase() > b.split('; ')[0].toLowerCase() ? 1 : -1
+            ));
+            break
+        case 'importance':
+            todos.sort((a, b) => (- a.indexOf('!') + b.indexOf('!')));
+            break
+        case 'date':
+            todos.sort((a, b) => {
+                const dateA = new Date(a.split('; ')[1]);
+                const dateB = new Date(b.split('; ')[1]);
+                
+                if (!dateA && !dateB) return 0;
+                if (!dateA) return 1;
+                if (!dateB) return -1;
+                
+                return dateB - dateA;
+            });
+            break  
+    }
+
+    for(let todo of todos)
+        console.log(todo) 
+}
+
 function show(){
     for(let todo of todos)
         console.log(todo);
@@ -66,6 +95,9 @@ function processCommand(command) {
             break;
         case 'user':
             findUser(command);
+            break;
+        case 'sort':
+            sort(command.split(' ')[1]);
             break;
         default:
             console.log('wrong command');
