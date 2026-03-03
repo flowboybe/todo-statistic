@@ -41,7 +41,7 @@ function getMaxRowLengths(){
 function padToMaxRowLengths(maxRowLengths) {
     for (let row = 0; row < table.length; row++)
         for (let col = 0; col < 4; col++){
-            table[row][col] = table[row][col].padEnd(maxRowLengths[col], ' ') + '|'
+            table[row][col] = table[row][col].padEnd(maxRowLengths[col], ' ') + '|';
         }
 }
 
