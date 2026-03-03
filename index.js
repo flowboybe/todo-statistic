@@ -3,6 +3,7 @@ const {readLine} = require('./console');
 
 const files = getFiles();
 const todos = findTodos()
+const table = []
 
 console.log('Please, write your command!');
 readLine(processCommand);
@@ -10,6 +11,27 @@ readLine(processCommand);
 function getFiles() {
     const filePaths = getAllFilePathsWithExtension(process.cwd(), 'js');
     return filePaths.map(path => readFile(path));
+}
+
+function fillTableRow(todo) {
+    let result = '';
+    let splitted_todo = todo.split(';');
+    if (splitted_todo.length <= 1)
+        return;
+    if (todo.indexOf('!') != -1)
+        result += '  !   |'
+    else
+        result += '      |';
+    result += `  ${(splitted_todo[0].split(' ')[2] || '').trim()}  |`;
+    result += `  ${(splitted_todo[1] || '').trim()}  |`;
+    result += `  ${(splitted_todo[2] || '').trim()}`;
+    table.push(result);
+}
+
+function renderTable() {
+    for (let row of table) {
+        console.log(row);
+    }
 }
 
 function findTodos(){
@@ -36,30 +58,34 @@ function findUser(command){
     let user_name = command.split(' ')[1].toLowerCase();
     for (let todo of todos){
         if (todo.split(';')[0].toLowerCase().endsWith(user_name)){
-            console.log(todo);
+            fillTableRow(todo);
         }
     }
+    renderTable();
 }
 
 function show(){
-    for(let todo of todos)
-        console.log(todo);
+    for (let todo of todos)
+        fillTableRow(todo);
+    renderTable();
 }
 
 function important(){
-    for(let todo of todos){
+    for (let todo of todos){
         if(todo.indexOf('!') != -1)
-            console.log(todo);
+            fillTableRow(todo);
     }
+    renderTable();
 }
 
 function findAfterDate(command){
     let date = new Date(command.split(' ')['1']);
     for (let todo of todos){
         if (new Date(todo.split(';')[1]) > date){
-            console.log(todo);
+            fillTableRow(todo);
         }
     }
+    renderTable();
 }
 
 function processCommand(command) {
