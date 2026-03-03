@@ -2,19 +2,25 @@ const {getAllFilePathsWithExtension, readFile} = require('./fileSystem');
 const {readLine} = require('./console');
 
 const files = getFiles();
-const todos = findTodos()
+const todoPaths = findTodos();
+const todos = todoPaths[0];
+const todoPathsDict = todoPaths[1];
 
 console.log('Please, write your command!');
 readLine(processCommand);
 
 function getFiles() {
     const filePaths = getAllFilePathsWithExtension(process.cwd(), 'js');
-    return filePaths.map(path => readFile(path));
+    return filePaths.map(path => [path, readFile(path)]);
 }
 
 function findTodos(){
-    arr = [];
-    for(const file of files){
+    let arr = [];
+    let todoPathsDict = {};
+    
+    for(const pathFile of files){
+        let file = pathFile[1];
+        let path = pathFile[0];
         let pos = 0;
         const target = '// ' + 'TODO'
         while (true) {
@@ -25,11 +31,13 @@ function findTodos(){
 
             let endPos = file.indexOf('\n', foundPos + 1);
             endPos = endPos === -1 ? file.length: endPos;
-            arr.push(file.substring(foundPos, endPos));
+            let todo = file.substring(foundPos, endPos);
+            arr.push(todo);
+            todoPathsDict[todo] = path;
             pos = foundPos + 1;
         }
     }
-    return arr;
+    return [arr, todoPathsDict];
 }
 
 function findUser(command){
@@ -103,6 +111,8 @@ function processCommand(command) {
             console.log('wrong command');
             break;
     }
+
+    console.log(todoPathsDict)
 }
 
 // TODO you can do it!
