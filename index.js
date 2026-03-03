@@ -26,14 +26,15 @@ function fillTableRow(todo) {
         result.push('      ');
     result.push(`  ${(splitted_todo[0].split(' ')[2]).trim()}  `);
     result.push(`  ${(splitted_todo[1]).trim()}  `);
-    result.push(`  ${(splitted_todo[2]).trim()}`);
+    result.push(`  ${(splitted_todo[2]).trim()}  `);
+    result.push(`  ${todoPathsDict[todo]}`);
     table.push(result);
-}
+} 
 
 function getMaxRowLengths(){
-    let maxRowLengths = [0, 0, 0, 0];
+    let maxRowLengths = [0, 0, 0, 0, 0];
     for (let row = 0; row < table.length; row++)
-        for (let col = 0; col < 4; col++){
+        for (let col = 0; col < 5; col++){
             if (table[row][col].length > maxRowLengths[col])
                 maxRowLengths[col] = table[row][col].length;
         }
@@ -42,7 +43,7 @@ function getMaxRowLengths(){
 
 function padToMaxRowLengths(maxRowLengths) {
     for (let row = 0; row < table.length; row++)
-        for (let col = 0; col < 3; col++){
+        for (let col = 0; col < 4; col++){
             table[row][col] = table[row][col].padEnd(maxRowLengths[col], ' ') + '|';
         }
 }
