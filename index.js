@@ -32,8 +32,13 @@ function findTodos(){
     return arr;
 }
 
-function findUser(user){
-
+function findUser(command){
+    let user_name = command.split(' ')[1].toLowerCase();
+    for (let todo of todos){
+        if (todo.split(';')[0].toLowerCase().endsWith(user_name)){
+            console.log(todo);
+        }
+    }
 }
 
 function show(){
@@ -49,7 +54,7 @@ function important(){
 }
 
 function processCommand(command) {
-    switch (command) {
+    switch (command.split(' ')[0]) {
         case 'exit':
             process.exit(0);
             break;
@@ -58,6 +63,9 @@ function processCommand(command) {
             break;
         case 'important':
             important();
+            break;
+        case 'user':
+            findUser(command);
             break;
         default:
             console.log('wrong command');
