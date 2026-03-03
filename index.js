@@ -2,8 +2,8 @@ const {getAllFilePathsWithExtension, readFile} = require('./fileSystem');
 const {readLine} = require('./console');
 
 const files = getFiles();
-const todos = findTodos()
-const table = []
+const todos = findTodos();
+const table = [];
 
 console.log('Please, write your command!');
 readLine(processCommand);
@@ -14,23 +14,45 @@ function getFiles() {
 }
 
 function fillTableRow(todo) {
-    let result = '';
+    let result = [];
     let splitted_todo = todo.split(';');
     if (splitted_todo.length <= 1)
         return;
     if (todo.indexOf('!') != -1)
-        result += '  !   |'
+        result.push('  !   ');
     else
-        result += '      |';
-    result += `  ${(splitted_todo[0].split(' ')[2] || '').trim()}  |`;
-    result += `  ${(splitted_todo[1] || '').trim()}  |`;
-    result += `  ${(splitted_todo[2] || '').trim()}`;
+        result.push('      ');
+    result.push(`  ${(splitted_todo[0].split(' ')[2]).trim()}  `);
+    result.push(`  ${(splitted_todo[1]).trim()}  `);
+    result.push(`  ${(splitted_todo[2]).trim()}`);
     table.push(result);
 }
 
+function getMaxRowLengths(){
+    let maxRowLengths = [0, 0, 0, 0];
+    for (let row = 0; row < table.length; row++)
+        for (let col = 0; col < 4; col++){
+            if (table[row][col].length > maxRowLengths[col])
+                maxRowLengths[col] = table[row][col].length;
+        }
+    return maxRowLengths;
+}
+
+function padToMaxRowLengths(maxRowLengths) {
+    for (let row = 0; row < table.length; row++)
+        for (let col = 0; col < 4; col++){
+            table[row][col] = table[row][col].padEnd(maxRowLengths[col], ' ') + '|'
+        }
+}
+
 function renderTable() {
+    let maxRowLengths = getMaxRowLengths();
+    padToMaxRowLengths(maxRowLengths);
     for (let row of table) {
-        console.log(row);
+        let result = '';
+        for (let col of row)
+            result += col;
+        console.log(result);
     }
 }
 
